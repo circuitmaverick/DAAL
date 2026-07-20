@@ -27,7 +27,7 @@ int main() {
     end = clock();
 
     // display execution time
-    int execTime = (end-start)%CLOCKS_PER_SEC;
+    int execTime = (end-start)/CLOCKS_PER_SEC;
 
     printf("Execution Time: %ds\n", execTime);
 
