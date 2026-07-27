@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<limits.h>
+#include<time.h>
 
 #define FILEPATH "files/2_data.txt"
 
@@ -13,10 +13,14 @@ int main() {
 
     FILE *fp;
     int n, *arr;
+    clock_t start, end;
 
     // ------------------------------------
     // HANDLE FILE
     // ------------------------------------
+
+    // [ANALAYSIS] start the clock
+    start = clock();
 
     // open the existing file
     fp = fopen(FILEPATH, "r");
@@ -50,19 +54,26 @@ int main() {
     // display second largest and second smallest
     printf("\nSecond Largest:\t%d\nSecond Smallest:\t%d\n", arr[n-2], arr[1]);
 
-    printf("\n");
+    // [ANALAYSIS] end the clock
+    end = clock();
+
+    // [ANALAYSIS] calculate execution time
+    int execTime = (end-start)/CLOCKS_PER_SEC;
+
+    // [ANALYSIS] display execution time
+    printf("\n[ANALYSIS]\tExecution Time: %ds\n", execTime);
 
 }
 
-void selectionSort(int *arr, int n) {
+void selectionSort(int *a, int n) {
     for(int i=0; i<n; i++) {
         int smallest = i;
         for(int j=i; j<n; j++)
-            if(arr[j] < arr[smallest]) smallest = j;
+            if(a[j] < a[smallest]) smallest = j;
         if(smallest != i) {
-            int temp = arr[i];
-            arr[i] = arr[smallest];
-            arr[smallest] = temp;
+            int temp = a[i];
+            a[i] = a[smallest];
+            a[smallest] = temp;
         }
     }
 }

@@ -27,7 +27,7 @@ int main() {
     // check if file exists
     if(fp == NULL) {
         printf("FILE DOESN'T EXIST\n");
-        return 0;
+        return 1;
     }
 
     // write stuff
@@ -86,7 +86,7 @@ int main() {
     int execTime = (end-start)/CLOCKS_PER_SEC;
 
     // [ANALYSIS] display the execution time
-    printf("\n\n-----ANALYSIS-----\nExecution Time: %ds\n------------------\n", execTime);
+    printf("\n\n[ANALYSIS]\tExecution Time: %ds\n", execTime);
 
     return 0;
 
