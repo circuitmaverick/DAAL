@@ -6,8 +6,8 @@
 #define DESC_FILE "files/inDesc.dat"
 #define RND_FILE "files/inRnd.dat"
 
-void mergeSort(int*, int, int);
-void merge(int*, int, int, int);
+void mergeSort(int*, int, int, int*);
+void merge(int*, int, int, int, int*);
 
 int main() {
     clock_t start, end;
@@ -31,7 +31,7 @@ int main() {
         printf("\n");
 
         FILE *ifp;
-        int *data, length, i;
+        int *data, length, i, comparisons=0;
 
         switch (choice)
         {
@@ -56,7 +56,7 @@ int main() {
             printf("\n");
             // sort
             start = clock();
-            mergeSort(data, 0, length-1);
+            mergeSort(data, 0, length-1, &comparisons);
             end = clock();
             // show analysis and output
             printf("After sorting:\t");
@@ -86,7 +86,7 @@ int main() {
             printf("\n");
             // sort
             start = clock();
-            mergeSort(data, 0, length-1);
+            mergeSort(data, 0, length-1, &comparisons);
             end = clock();
             // show analysis and output
             printf("After sorting:\t");
@@ -116,7 +116,7 @@ int main() {
             printf("\n");
             // sort
             start = clock();
-            mergeSort(data, 0, length-1);
+            mergeSort(data, 0, length-1, &comparisons);
             end = clock();
             // show analysis and output
             printf("After sorting:\t");
@@ -129,22 +129,23 @@ int main() {
             return 0;
             break;
         }
+        printf("\n[ANALYSIS]\tComparisons:\t%d\n", comparisons);
     }
 
 }
 
-void mergeSort(int *data, int l, int r) {
+void mergeSort(int *data, int l, int r, int *comparisons) {
     if(l < r) {
         int m = l + (r - l)/2;
 
-        mergeSort(data, l, m);
-        mergeSort(data, m+1, r);
+        mergeSort(data, l, m, comparisons);
+        mergeSort(data, m+1, r, comparisons);
 
-        merge(data, l, m, r);
+        merge(data, l, m, r, comparisons);
     }
 }
 
-void merge(int *data, int l, int m, int r) {
+void merge(int *data, int l, int m, int r, int *comparisons) {
     int i, j, k;
     int n1 = m-l + 1;
     int n2 = r - m;
@@ -162,9 +163,11 @@ void merge(int *data, int l, int m, int r) {
         if(L[i] <= R[j]) {
             data[k] = L[i];
             i++;
+            (*comparisons)++;
         } else {
             data[k] = R[j];
             j++;
+            (*comparisons)++;
         }
         k++;
     }

@@ -1,14 +1,15 @@
 #include<stdio.h>
 #include<stdlib.h>
-// #include<time.h>
 #include "exectime.h"
 
 #define ASC_FILE "files/inAsc.dat"
 #define DESC_FILE "files/inDesc.dat"
 #define RND_FILE "files/inRnd.dat"
+#define OUT_FILE "files/outSorted.dat"
 
-void quickSort(int*, int, int);
-int partition(int*, int, int);
+void quickSort(int*, int, int, int*);
+int partition(int*, int, int, int*);
+void writeOut(int*, int, int);
 
 int main() {
     while(1) {
@@ -30,7 +31,7 @@ int main() {
         printf("\n");
 
         FILE *ifp;
-        int *data, length, i;
+        int *data, length, i, comparisons=0;
 
         switch (choice)
         {
@@ -55,13 +56,10 @@ int main() {
             printf("\n");
             // sort
             start();
-            quickSort(data, 0, length-1);
+            quickSort(data, 0, length-1, &comparisons);
             stop();
-            // show analysis and output
-            printf("After sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
+            writeOut(data, length, comparisons);
+            // show analysis
             printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         case 2:
@@ -85,13 +83,11 @@ int main() {
             printf("\n");
             // sort
             start();
-            quickSort(data, 0, length-1);
+            quickSort(data, 0, length-1, &comparisons);
             stop();
-            // show analysis and output
-            printf("After sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
+            // writeOut to file
+            writeOut(data, length, comparisons);
+            // show analysis
             printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         case 3:
@@ -115,28 +111,43 @@ int main() {
             printf("\n");
             // sort
             start();
-            quickSort(data, 0, length-1);
+            quickSort(data, 0, length-1, &comparisons);
             stop();
-            // show analysis and output
-            printf("After sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
+            writeOut(data, length, comparisons);
+            // show analysis
             printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         default:
             return 0;
             break;
         }
+
+        // read the output file and display it's contents
+        FILE *ofp = fopen(OUT_FILE, "r");
+
+        if(!ofp) {
+            printf("\n[ERROR]\tCouldn't access the file:\t%s\n", OUT_FILE);
+            return 1;
+        }
+
+        printf("\nAfter sorting:\t");
+
+        char ch;
+        while((ch=fgetc(ofp))!=EOF) putchar(ch);
+
+        fclose(ofp);
+        fclose(ifp);
+        free(data);
     }
 
 }
 
-int partition(int *data, int low, int high) {
+int partition(int *data, int low, int high, int *comparisons) {
     int pivot = high;
 
     for(int i=low; i<=high; i++) {
         if((data[i] > data[pivot] && i < pivot) || (data[i] < data[pivot] && i > pivot)) {
+            (*comparisons)++;
             // swap
             int temp = data[i];
             data[i] = data[pivot];
@@ -149,13 +160,29 @@ int partition(int *data, int low, int high) {
     return pivot;
 }
 
-void quickSort(int *data, int low, int high) {
+void quickSort(int *data, int low, int high, int *comparisons) {
 
     if (low < high) {
-        int pivot = partition(data, low, high);
+        int pivot = partition(data, low, high, comparisons);
 
-        quickSort(data, low, pivot-1);
-        quickSort(data, pivot+1, high);
+        quickSort(data, low, pivot-1, comparisons);
+        quickSort(data, pivot+1, high, comparisons);
     }
 }
 
+void writeOut(int *data, int length, int comparisons) {
+    FILE *ofp = fopen(OUT_FILE, "w");
+
+    if(!ofp) {
+        printf("\n[ERROR]\tCouldn't access the file:\t%s\n", OUT_FILE);
+        return;
+    }
+
+    for(int i=0; i<length; i++)
+        fprintf(ofp, "%d\t", data[i]);
+
+    fprintf(ofp,"\nComparisons:\t%d", comparisons);
+
+    fclose(ofp);
+    return;
+}
