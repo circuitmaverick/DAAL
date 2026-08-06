@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<math.h>
 #include<time.h>
 
 int GCD(int, int);
@@ -14,7 +13,7 @@ int main(int argc, char* args[]) {
     printf("\n");
 
     if(argc != 3) {
-        printf("[ERROR]\tInsufficient arguments: out/2_gcd_file <input_file> <output_file>\n");
+        printf("[ERROR]\tInsufficient arguments: out/4_gcd_file <input_file> <output_file>\n");
         return 1;
     }
 
@@ -42,12 +41,22 @@ int main(int argc, char* args[]) {
 
     end = clock();
 
-    printf("\n[ANALYSIS]\tExecution Time:\t%ds\n", (end-start)/CLOCKS_PER_SEC);
+    printf("\n[ANALYSIS]\tExecution Time:\t%.3lfms\n", (((double)(end-start))/CLOCKS_PER_SEC)*1000);
+
+    return 1;
 }
 
 int GCD(int n1, int n2) {
-    int smaller = n1 < n2 ? n1 : n2, gcd;
-    for(int i=1; i<smaller/2;i++)
-        if(n1%i == 0 && n2%i == 0) gcd = i;
-    return gcd;
+    int rem;
+    if (n1 == 1 || n2 == 1) return 1;
+    else if (n1 == n2) return n1;
+    else if (n1 < n2) {
+        rem = n2 % n1;
+        return rem == 0 ? n1 : GCD(n1, rem);
+    }
+    else if (n2 < n1) {
+        rem = n1 % n2;
+        return rem == 0 ? n2 : GCD(n2, rem);
+    }
+    else return 1;
 }

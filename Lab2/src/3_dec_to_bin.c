@@ -10,7 +10,6 @@ int main(int argc, char* args[]) {
     // -------------------
     // INITIALIZATIONS
     // -------------------
-    clock_t start, end;
     FILE *ifp, *ofp;
     clock_t start, end;
     int n;
@@ -63,7 +62,7 @@ int main(int argc, char* args[]) {
     end = clock();
 
     // [ANALYSIS] Execution time displayed
-    printf("\n[ANALYSIS]\tExecution Time:\t%ds\n", (end-start)%CLOCKS_PER_SEC);
+    printf("\n[ANALYSIS]\tExecution Time:\t%.3lfms\n", (((double)(end-start))/CLOCKS_PER_SEC)*1000);
 
 }
 
