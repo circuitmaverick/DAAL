@@ -11,6 +11,8 @@ void quickSort(int*, int, int, int*);
 int partition(int*, int, int, int*);
 void writeOut(int*, int, int);
 
+// void execute(int choice)
+
 int main() {
     while(1) {
         // menu
@@ -41,26 +43,6 @@ int main() {
                 printf("[ERROR]\tCouldn't access file:\t%s\n", ASC_FILE);
                 return 1;
             }
-            // get array length
-            fscanf(ifp, "%d", &length);
-            data = calloc(sizeof(int), length);
-            if(!data) {
-                printf("[ERROR]\tMemory allocation failed.\n");
-                return 1;
-            }
-            i=0;
-            while(fscanf(ifp,"%d",&data[i++]) != EOF);
-            printf("Before sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
-            // sort
-            start();
-            quickSort(data, 0, length-1, &comparisons);
-            stop();
-            writeOut(data, length, comparisons);
-            // show analysis
-            printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         case 2:
             ifp = fopen(DESC_FILE, "r");
@@ -68,27 +50,6 @@ int main() {
                 printf("[ERROR]\tCouldn't access file:\t%s\n", DESC_FILE);
                 return 1;
             }
-            // get array length
-            fscanf(ifp, "%d", &length);
-            data = calloc(sizeof(int), length);
-            if(!data) {
-                printf("[ERROR]\tMemory allocation failed.\n");
-                return 1;
-            }
-            i=0;
-            while(fscanf(ifp,"%d",&data[i++]) != EOF);
-            printf("Before sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
-            // sort
-            start();
-            quickSort(data, 0, length-1, &comparisons);
-            stop();
-            // writeOut to file
-            writeOut(data, length, comparisons);
-            // show analysis
-            printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         case 3:
             ifp = fopen(RND_FILE, "r");
@@ -96,31 +57,31 @@ int main() {
                 printf("[ERROR]\tCouldn't access file:\t%s\n", RND_FILE);
                 return 1;
             }
-            // get array length
-            fscanf(ifp, "%d", &length);
-            data = calloc(sizeof(int), length);
-            if(!data) {
-                printf("[ERROR]\tMemory allocation failed.\n");
-                return 1;
-            }
-            i=0;
-            while(fscanf(ifp,"%d",&data[i++]) != EOF);
-            printf("Before sorting:\t");
-            i=0;
-            while(i<length) printf("%d\t", data[i++]);
-            printf("\n");
-            // sort
-            start();
-            quickSort(data, 0, length-1, &comparisons);
-            stop();
-            writeOut(data, length, comparisons);
-            // show analysis
-            printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
             break;
         default:
             return 0;
             break;
         }
+        // get array length
+        fscanf(ifp, "%d", &length);
+        data = calloc(sizeof(int), length);
+        if(!data) {
+            printf("[ERROR]\tMemory allocation failed.\n");
+            return 1;
+        }
+        i=0;
+        while(fscanf(ifp,"%d",&data[i++]) != EOF);
+        printf("Before sorting:\t");
+        i=0;
+        while(i<length) printf("%d\t", data[i++]);
+        printf("\n");
+        // sort
+        start();
+        quickSort(data, 0, length-1, &comparisons);
+        stop();
+        writeOut(data, length, comparisons);
+        // show analysis
+        printf("\n[ANALYSIS]\tExecution Time: %.2lfns\n", getTime(ns));
 
         // read the output file and display it's contents
         FILE *ofp = fopen(OUT_FILE, "r");
@@ -175,7 +136,7 @@ void writeOut(int *data, int length, int comparisons) {
 
     if(!ofp) {
         printf("\n[ERROR]\tCouldn't access the file:\t%s\n", OUT_FILE);
-        return;
+        exit(1);
     }
 
     for(int i=0; i<length; i++)
